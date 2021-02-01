@@ -10,6 +10,48 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+function promptUser() {
+    return inquirer.prompt(questions)
+};
+
+const questions = [
+    {
+        type: 'input',
+        name: 'name',
+        message: 'What is the employee name?',
+    },
+    {
+        type: 'input',
+        name: 'id',
+        message: 'What is the employee id?',
+    },
+    {
+        type: 'list',
+        name: 'name',
+        choices: [
+            'Manager',
+            'Engineer',
+            'Intern',
+            'Quit',
+        ]
+    },
+];
+
+async function init() {
+    try {
+        // Ask user questions and generate responses
+        const response = await promptUser();
+        const generateContent = response;
+        // Write new README.md to dist directory
+
+        console.log('Success! README created.');
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+init();
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
