@@ -13,9 +13,11 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+// Let allEmployees = [];
 
 function promptUser() {
     return inquirer.prompt(questions)
+    
 };
 
 
@@ -84,14 +86,13 @@ async function init() {
     try {
         // Ask user questions and generate responses
         const response = await promptUser();
-        const generateContent = generateTeam(response);
-        if (response.role === 'Manager' || response.role === 'Engineer' || response.role === 'Intern') {
-                promptUser(); 
+        if (response.role === 'Quit') {
+            await writeFileAsync('../output/team.html', generateTeam(response));
+            console.log(response.role)
         }
         else {
-            await writeFileAsync('../output/team.html', generateContent);
-            // Write new html to output directory
-            console.log('Success! Team profile created.');
+            await promptUser();
+            console.log(response.role)
         }
     } catch (err) {
         console.log(err);
