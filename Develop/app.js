@@ -4,17 +4,32 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
+const writeFileAsync = util.promisify(fs.writeFile);
+
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+
 function promptUser() {
     return inquirer.prompt(questions)
 };
 
+
 const questions = [
+    {
+        type: 'list',
+        name: 'role',
+        choices: [
+            'Manager',
+            'Engineer',
+            'Intern',
+            'Quit',
+        ]
+    },
     {
         type: 'input',
         name: 'name',
@@ -25,26 +40,59 @@ const questions = [
         name: 'id',
         message: 'What is the employee id?',
     },
-    {
-        type: 'list',
-        name: 'name',
-        choices: [
-            'Manager',
-            'Engineer',
-            'Intern',
-            'Quit',
-        ]
-    },
 ];
+
+function generateTeam(response) {
+    return `
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>My Team</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/c502137733.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 jumbotron mb-3 team-heading">
+                <h1 class="text-center">My Team</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="team-area col-12 d-flex justify-content-center">
+                {{ team }}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+ `;
+}
+
 
 async function init() {
     try {
         // Ask user questions and generate responses
         const response = await promptUser();
-        const generateContent = response;
-        // Write new README.md to dist directory
-
-        console.log('Success! README created.');
+        const generateContent = generateTeam(response);
+        if (response.role === 'Manager' || response.role === 'Engineer' || response.role === 'Intern') {
+                promptUser(); 
+        }
+        else {
+            await writeFileAsync('../output/team.html', generateContent);
+            // Write new html to output directory
+            console.log('Success! Team profile created.');
+        }
     } catch (err) {
         console.log(err);
     }
