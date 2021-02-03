@@ -6,18 +6,15 @@ const path = require("path");
 const fs = require("fs");
 const util = require("util");
 const writeFileAsync = util.promisify(fs.writeFile);
-
-
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
-
 const render = require("./lib/htmlRenderer");
 
-// Let allEmployees = [];
+let team = [];
+
 
 function promptUser() {
     return inquirer.prompt(questions)
-    
 };
 
 
@@ -42,64 +39,176 @@ const questions = [
         name: 'id',
         message: 'What is the employee id?',
     },
+    {
+        type: 'input',
+        name: 'email',
+        message: 'What is the employee email?',
+    },
 ];
 
-function generateTeam(response) {
-    return `
-<!DOCTYPE html>
-<html lang="en">
+const managerQuestion = [
+    {
+        type: 'input',
+        name: 'officeNumber',
+        message: 'What is the employee office number?',
+    },
+];
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>My Team</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/c502137733.js"></script>
-</head>
 
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 jumbotron mb-3 team-heading">
-                <h1 class="text-center">My Team</h1>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="team-area col-12 d-flex justify-content-center">
-                {{ team }}
-            </div>
-        </div>
-    </div>
-</body>
+const engineerQuestions = [
+    {
+        type: 'input',
+        name: 'github',
+        message: 'What is the employee github account?',
+    },
 
-</html>
- `;
+];
+
+
+
+function managerInfo() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'What is the employee name?',
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: 'What is the employee id?',
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: 'What is the employee email?',
+        },
+        {
+            type: 'input',
+            name: 'officeNumber',
+            message: 'What is the employee office number?',
+        },
+    ])
+    .then(response => {
+        const manager = new Manager(response.name, response.id, response.email, response.officeNumber);
+        team.push(manager);
+        console.log(manager, team);
+        createTeamMember();
+    })
+}
+
+function engineerInfo() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'What is the employee name?',
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: 'What is the employee id?',
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: 'What is the employee email?',
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: 'What is the employee github account?',
+        },
+    ])
+        .then(response => {
+            const engineer = new Manager(response.name, response.id, response.email, response.github);
+            team.push(engineer);
+            console.log(engineer, team);
+            createTeamMember();
+        })
+}
+
+function internInfo() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'What is the employee name?',
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: 'What is the employee id?',
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: 'What is the employee email?',
+        },
+        {
+            type: 'input',
+            name: 'school',
+            message: 'What is the employee school?',
+        },
+    ])
+        .then(response => {
+            const engineer = new Manager(response.name, response.id, response.email, response.school);
+            team.push(engineer);
+            console.log(engineer, team);
+            createTeamMember();
+        })
 }
 
 
-async function init() {
-    try {
-        // Ask user questions and generate responses
-        const response = await promptUser();
-        if (response.role === 'Quit') {
-            await writeFileAsync('../output/team.html', generateTeam(response));
-            console.log(response.role)
-        }
-        else {
-            await promptUser();
-            console.log(response.role)
-        }
-    } catch (err) {
-        console.log(err);
+function createTeamMember() {
+    console.log('testing')
+    // switch(response.role) {
+        // case "Engineer":
+            // createEngineer()
+            // break;
+            // default:
+                renderHTML()
+    // }
+}
+
+function engineerInfo(){
+
+}
+
+function renderHTML() {
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR);
     }
+    fs.writeFile(outputPath, render(team), err => {
+        if (err) {
+        throw(err);
+    }
+})
+
+
+
+
 }
 
-init();
+// async function init() {
+    
+    // try {
+    //     // Ask user questions and generate responses
+    //     const response = await promptUser();
+    //     if (response.role === 'Quit') {
+    //         await writeFileAsync('../output/team.html', generateTeam(response));
+    //         console.log(response.role)
+    //     }
+    //     else if (response.role === 'Manager' || response.role === 'Engineer' || response.role === 'Intern') {
+    //         await promptUser();
+    //         console.log(response.role)
+    //     }
+    // } catch (err) {
+    //     console.log(err);
+    // }
+// }
+
+managerInfo();
 
 
 // Write code to use inquirer to gather information about the development team members,
