@@ -12,8 +12,6 @@ const render = require("./lib/htmlRenderer");
 
 let team = [];
 
-
-
 function createManager() {
     inquirer.prompt([
         {
@@ -122,7 +120,7 @@ function createTeamMember() {
     console.log('Profile created!')
     // switch(response.role) {
         // case "Engineer":
-            // createEngineer()
+        //     createEngineer()
             // break;
             // default:
                 renderHTML()

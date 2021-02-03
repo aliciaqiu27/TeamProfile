@@ -12,13 +12,14 @@ node app.js
 ## Usage 
 1) Navigate into the path "../lib/Employee.js".
 2) Type and run "npm test" in the Terminal to make sure all tests pass.
-3) Go into the path "../test/app.js". 
+3) Go into "app.js". 
 4) Type and run "node app" in your Terminal.
 5) Answer the questions being prompted in the Terminal until you have finished inputting all of your employees.
+6) Once you are done, select "Quit" and your team profile will be generated in "../output/team.html". 
 
 ## Credits
-
-
+https://m.dotdev.co/how-to-use-classes-in-node-js-with-no-pre-compilers-and-why-you-should-ad9ffd63817d
+https://www.twilio.com/blog/how-to-build-a-cli-with-node-js
 
 ## Contributions
 My github is: :octocat: https://github.com/aliciaqiu27
