@@ -13,61 +13,19 @@ const render = require("./lib/htmlRenderer");
 let team = [];
 
 
-function promptUser() {
-    return inquirer.prompt(questions)
-};
 
-
-const questions = [
-    {
-        type: 'list',
-        name: 'role',
-        choices: [
-            'Manager',
-            'Engineer',
-            'Intern',
-            'Quit',
-        ]
-    },
-    {
-        type: 'input',
-        name: 'name',
-        message: 'What is the employee name?',
-    },
-    {
-        type: 'input',
-        name: 'id',
-        message: 'What is the employee id?',
-    },
-    {
-        type: 'input',
-        name: 'email',
-        message: 'What is the employee email?',
-    },
-];
-
-const managerQuestion = [
-    {
-        type: 'input',
-        name: 'officeNumber',
-        message: 'What is the employee office number?',
-    },
-];
-
-
-const engineerQuestions = [
-    {
-        type: 'input',
-        name: 'github',
-        message: 'What is the employee github account?',
-    },
-
-];
-
-
-
-function managerInfo() {
+function createManager() {
     inquirer.prompt([
+        {
+            type: 'list',
+            name: 'role',
+            choices: [
+                'Manager',
+                'Engineer',
+                'Intern',
+                'Quit',
+            ]
+        },
         {
             type: 'input',
             name: 'name',
@@ -97,7 +55,7 @@ function managerInfo() {
     })
 }
 
-function engineerInfo() {
+function createEngineer() {
     inquirer.prompt([
         {
             type: 'input',
@@ -121,14 +79,14 @@ function engineerInfo() {
         },
     ])
         .then(response => {
-            const engineer = new Manager(response.name, response.id, response.email, response.github);
+            const engineer = new Engineer(response.name, response.id, response.email, response.github);
             team.push(engineer);
             console.log(engineer, team);
             createTeamMember();
         })
 }
 
-function internInfo() {
+function createIntern() {
     inquirer.prompt([
         {
             type: 'input',
@@ -152,16 +110,16 @@ function internInfo() {
         },
     ])
         .then(response => {
-            const engineer = new Manager(response.name, response.id, response.email, response.school);
-            team.push(engineer);
-            console.log(engineer, team);
+            const intern = new Intern(response.name, response.id, response.email, response.school);
+            team.push(intern);
+            console.log(intern, team);
             createTeamMember();
         })
 }
 
 
 function createTeamMember() {
-    console.log('testing')
+    console.log('Profile created!')
     // switch(response.role) {
         // case "Engineer":
             // createEngineer()
@@ -169,10 +127,6 @@ function createTeamMember() {
             // default:
                 renderHTML()
     // }
-}
-
-function engineerInfo(){
-
 }
 
 function renderHTML() {
@@ -184,32 +138,9 @@ function renderHTML() {
         throw(err);
     }
 })
-
-
-
-
 }
 
-// async function init() {
-    
-    // try {
-    //     // Ask user questions and generate responses
-    //     const response = await promptUser();
-    //     if (response.role === 'Quit') {
-    //         await writeFileAsync('../output/team.html', generateTeam(response));
-    //         console.log(response.role)
-    //     }
-    //     else if (response.role === 'Manager' || response.role === 'Engineer' || response.role === 'Intern') {
-    //         await promptUser();
-    //         console.log(response.role)
-    //     }
-    // } catch (err) {
-    //     console.log(err);
-    // }
-// }
-
-managerInfo();
-
+createManager();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
